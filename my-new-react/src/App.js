@@ -1,9 +1,26 @@
 import Person from "./Person/Person";
 import "./App.css";
 import { Component } from "react";
+import styled from 'styled-components';
+
+
+const StyledButton = styled.button`
+
+  background-color: ${props => props.alt ? 'red' : 'green' };
+  color: white;
+  font: inherit;
+  border: 5px solid black;
+  padding: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${props => props.alt ? 'salmon' : 'lightgreen' };
+    color: white;
+  }
+`;
 
 class App extends Component {
-  
+
   state = {
     persons: [
       { id: 'as', name: "Eduardo", edad: 23 },
@@ -14,34 +31,34 @@ class App extends Component {
 
   };
 
-  nameChangeHandler = ( event, id ) => {
-    
-    const personIndex = this.state.persons.findIndex( p => {
+  nameChangeHandler = (event, id) => {
+
+    const personIndex = this.state.persons.findIndex(p => {
       return p.id === id;
     });
 
-    const person = {...this.state.persons[personIndex]}
-    
+    const person = { ...this.state.persons[personIndex] }
+
     person.name = event.target.value;
 
     const persons = [...this.state.persons];
-    
+
     persons[personIndex] = person;
 
 
-    this.setState({persons: persons});
+    this.setState({ persons: persons });
   };
-  
-  deletePerson = (personIndex)=>{
+
+  deletePerson = (personIndex) => {
     const persons = [...this.state.persons];
-    persons.splice(personIndex,1);
-    this.setState({persons: persons})
+    persons.splice(personIndex, 1);
+    this.setState({ persons: persons })
   }
 
-  togglePersonHandler = () =>{
-    
+  togglePersonHandler = () => {
+
     const doesShow = this.state.showPersons;
-    
+
     this.setState({
       showPersons: !doesShow
     })
@@ -51,28 +68,49 @@ class App extends Component {
 
   render() {
 
-    let persons =   null;
+    let persons = null;
+
     if (this.state.showPersons) {
+
       persons = (
 
         <div>
-          {this.state.persons.map((person,index) => {
-            return <Person 
-              click={()=> this.deletePerson(index)} 
+          {this.state.persons.map((person, index) => {
+            return <Person
+              click={() => this.deletePerson(index)}
               name={person.name}
               key={person.id}
-              changed={(event) => this.nameChangeHandler(event,person.id)} />
+              changed={(event) => this.nameChangeHandler(event, person.id)} />
           })}
         </div>
-      )
+      );
+      // style.backgroundColor = 'red';
+      // style[':hover'] = {
+      //   backgroundColor: 'salmon',
+      //   color: 'white'
+      // }
+    }
+
+    let classes = [];
+    
+    if (this.state.persons.length <= 2) {
+      classes.push('red');
+    }
+    if (this.state.persons.length <= 1) {
+      classes.push('bold');
     }
 
     return (
-      <div className="App">
-        <button onClick={this.togglePersonHandler}>boton</button>
-        { persons }
-        
-      </div>
+      
+        <div className="App">
+          <p className={classes.join(' ')}>hi</p>
+          <StyledButton
+            alt={this.state.showPersons}
+            onClick={this.togglePersonHandler}>boton</StyledButton>
+          {persons}
+
+        </div>
+      
     );
   };
 
@@ -104,7 +142,7 @@ switchNameHandler = () => {
     { name: "Vivi", edad: 20 },
 
   ],
-  
+
 });
 
 
@@ -114,7 +152,7 @@ const switchNameHandler = () => {
 
   setPersonsState(
     {
-      persons: 
+      persons:
       [
         { name: "Eduardo2", edad: 23 },
         { name: "Vivi2", edad: 20 }
